@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { v4 as uuidv4 } from "uuid";
+import "../styles/Clients.css";
 
 const Clients = ({ handleOnSubmit }) => {
   const [client, setClient] = useState({
@@ -72,12 +73,13 @@ const Clients = ({ handleOnSubmit }) => {
   return (
     <Container>
       <Row className="justify-content-md-center">
-        <Col xs={12} md={8}>
-          {errorMsg && <p className="error-msg text-danger">{errorMsg}</p>}
+        <Col xs={12} md={12}>
+          {errorMsg && <p className="text-danger">{errorMsg}</p>}
           <Form onSubmit={handleFormSubmit}>
             <Form.Group controlId="clientName">
               <Form.Label>Client Name</Form.Label>
               <Form.Control
+                className="input-control"
                 type="text"
                 name="clientName"
                 value={clientName}
@@ -89,6 +91,7 @@ const Clients = ({ handleOnSubmit }) => {
             <Form.Group controlId="description">
               <Form.Label>Description</Form.Label>
               <Form.Control
+                className="input-control"
                 type="text"
                 name="description"
                 value={description}
@@ -100,6 +103,7 @@ const Clients = ({ handleOnSubmit }) => {
             <Form.Group controlId="totalPay">
               <Form.Label>Total Pay</Form.Label>
               <Form.Control
+                className="input-control"
                 type="text"
                 name="totalPay"
                 value={totalPay}
@@ -111,6 +115,7 @@ const Clients = ({ handleOnSubmit }) => {
             <Form.Group controlId="clientOrderCount">
               <Form.Label>Client Order Count</Form.Label>
               <Form.Control
+                className="input-control"
                 type="number"
                 name="clientOrderCount"
                 value={clientOrderCount}
@@ -122,6 +127,7 @@ const Clients = ({ handleOnSubmit }) => {
             <Form.Group controlId="deliveryDate">
               <Form.Label>Delivery Date</Form.Label>
               <Form.Control
+                className="input-control"
                 type="date"
                 name="deliveryDate"
                 value={deliveryDate}
@@ -130,7 +136,7 @@ const Clients = ({ handleOnSubmit }) => {
               />
             </Form.Group>
 
-            <Button variant="primary" type="submit" className="mt-3">
+            <Button variant="primary" type="submit" className="mt-3 submit-btn">
               Submit
             </Button>
           </Form>

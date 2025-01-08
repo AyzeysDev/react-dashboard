@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.7.2",
     "@reduxjs/toolkit": "^2.5.0",
     "bootstrap": "^5.3.3",
     "cra-template-redux": "2.0.0",
