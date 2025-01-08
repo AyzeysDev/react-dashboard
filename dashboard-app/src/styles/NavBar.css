@@ -2,7 +2,7 @@
     background-color: #223242 !important;/* Dark background color */
     padding: 10px 20px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    font-weight: bold;
+    font-weight: 477;
   }
   
   .navbar-brand {
@@ -14,7 +14,7 @@
   }
   
   .navbar-brand:hover {
-    color: #c0392b !important; /* Hover effect */
+    color: #4f58d1 !important; /* Hover effect */
   }
   
   .nav-link {
