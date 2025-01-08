@@ -4,11 +4,14 @@
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^2.5.0",
+    "bootstrap": "^5.3.3",
     "cra-template-redux": "2.0.0",
     "firebase": "^11.1.0",
     "react": "^18.0.0",
+    "react-bootstrap": "^2.10.7",
     "react-dom": "^18.0.0",
     "react-redux": "^9.2.0",
+    "react-router-bootstrap": "^0.26.3",
     "react-router-dom": "^7.1.1",
     "react-scripts": "5.0.1",
     "web-vitals": "^4.2.4"
