@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
+import "../styles/NavBar.css";
 
 const Header = () => {
   const location = useLocation();
@@ -11,7 +12,7 @@ const Header = () => {
     <Navbar bg="light" expand="lg">
       <Container>
         {/* Company Name */}
-        <Navbar.Brand as={Link} to="/">
+        <Navbar.Brand>
           Advanced Chain Technologies
         </Navbar.Brand>
 
@@ -38,6 +39,9 @@ const Header = () => {
                 </Nav.Link>
                 <Nav.Link as={Link} to="/log">
                   Log
+                </Nav.Link>
+                <Nav.Link as={Link} to="/" className="exit-link">
+                  Exit
                 </Nav.Link>
               </>
             )}
