@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../firebase/auth";
+import { Button, Form, Container } from "react-bootstrap";
 import "../styles/LoginSignup.css";
 
 const LoginSignup = () => {
@@ -26,35 +27,43 @@ const LoginSignup = () => {
   };
 
   return (
-    <div className="login-container">
-      <h1>Advanced Chain Technologies</h1>
-      <form onSubmit={handleLogin}>
-        <div className="form-group">
-          <label>Email</label>
-          <input
+    <Container className="login-container">
+      <h1 className="text-center mb-4">Advanced Chain Technologies</h1>
+      <Form onSubmit={handleLogin}>
+        <Form.Group controlId="formBasicEmail" className="mb-3">
+          <Form.Label>Email</Form.Label>
+          <Form.Control
             type="email"
-            placeholder="Enter your email"
+            placeholder="name@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-        </div>
-        <div className="form-group">
-          <label>Password</label>
-          <input
+        </Form.Group>
+
+        <Form.Group controlId="formBasicPassword" className="mb-3">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
             type="password"
-            placeholder="Enter your password"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-        </div>
-        {error && <p className="error-message">{error}</p>}
-        <button type="submit" className="login-button" disabled={loading}>
+        </Form.Group>
+
+        {error && <p className="text-danger mt-3">{error}</p>}
+
+        <Button
+          type="submit"
+          variant="outline-success"
+          className="w-100 mt-4"
+          disabled={loading}
+        >
           {loading ? "Logging in..." : "Login"}
-        </button>
-      </form>
-    </div>
+        </Button>
+      </Form>
+    </Container>
   );
 };
 
