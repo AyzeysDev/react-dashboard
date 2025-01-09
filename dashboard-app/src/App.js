@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Container } from 'react-bootstrap';
 import { AuthProvider } from "./contexts/authContexts";
+import { ClientProvider } from "./contexts/ClientContext";
 import Header from "./pages/Header"; // Import Header
 import LoginSignup from "./pages/LoginSignup";
 import Home from "./pages/Home";
@@ -21,6 +22,7 @@ function App() {
         {/* Header always visible */}
         <div>
           <Header />
+          <main className='py-3'>
           <Container>
             <Routes>
               <Route path="/" element={<LoginSignup />} />
@@ -29,6 +31,7 @@ function App() {
               <Route path="/client-hub" element={<ClientHub clients={clients} />} />
             </Routes>
           </Container>
+          </main>
         </div>
       </BrowserRouter>
     </AuthProvider>

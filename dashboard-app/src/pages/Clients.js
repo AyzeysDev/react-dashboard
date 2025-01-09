@@ -71,7 +71,15 @@ const Clients = ({ handleOnSubmit }) => {
   };
 
   return (
+    <>
     <Container>
+    <Button
+        variant="outline-info"
+        className="mt-3 ms-2 d-inline"
+        onClick={() => navigate("/client-hub")}>
+              Go to Client Hub
+      </Button>
+      <div style={{ marginTop: "30px" }}></div>  
       <Row className="justify-content-md-center">
         <Col xs={12} md={12}>
           {errorMsg && <p className="text-danger">{errorMsg}</p>}
@@ -117,6 +125,7 @@ const Clients = ({ handleOnSubmit }) => {
               <Form.Control
                 className="input-control"
                 type="number"
+                min="0"
                 name="clientOrderCount"
                 value={clientOrderCount}
                 placeholder="Enter client order count"
@@ -143,6 +152,7 @@ const Clients = ({ handleOnSubmit }) => {
         </Col>
       </Row>
     </Container>
+    </>
   );
 };
 
