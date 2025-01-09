@@ -14,9 +14,9 @@ function App() {
   const [clients, setClients] = useState([]);
   const [machineData, setMachineData] = useState({
     machine1: { value: 0, totalCount: 100 },
-    machine2: { value: 0, totalCount: 150 },
-    machine3: { value: 0, totalCount: 200 },
-    machine4: { value: 0, totalCount: 250 },
+    machine2: { value: 70, totalCount: 150 },
+    machine3: { value: 120, totalCount: 200 },
+    machine4: { value: 200, totalCount: 250 },
   });
 
   // Handle form submission for clients
