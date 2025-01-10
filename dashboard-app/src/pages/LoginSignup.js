@@ -27,6 +27,7 @@ const LoginSignup = () => {
   };
 
   return (
+    <div className="login-page">
     <Container className="login-container">
       <h1 className="text-center mb-4">Advanced Chain Technologies</h1>
       <Form onSubmit={handleLogin}>
@@ -56,7 +57,7 @@ const LoginSignup = () => {
 
         <Button
           type="submit"
-          variant="outline-success"
+          variant="dark"
           className="w-100 mt-4"
           disabled={loading}
         >
@@ -64,6 +65,7 @@ const LoginSignup = () => {
         </Button>
       </Form>
     </Container>
+    </div>
   );
 };
 

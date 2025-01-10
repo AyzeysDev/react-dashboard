@@ -9,14 +9,13 @@ const Header = () => {
 
   return (
     <header>
-      <Navbar bg="light" variant="light" expand="lg" collapseOnSelect>
+      <Navbar bg="dark" className="bg-body-tertiary" data-bs-theme="light" variant="light" expand="lg" collapseOnSelect>
         <Container>
           {/* Company Name */}
           <Navbar.Brand>
             <i className="fa fa-terminal"></i> Advanced Chain Technologies{" "}
             <i className="fa fa-terminal"></i>
           </Navbar.Brand>
-
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ml-auto">
