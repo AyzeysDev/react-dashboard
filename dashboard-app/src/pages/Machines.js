@@ -41,7 +41,7 @@ const Machines = ({ machineData }) => {
     <Chart
       chartType="ColumnChart"
       width="100%"
-      height="400px"
+      height="600px"
       diffdata={diffdata}
       options={options}
     />
