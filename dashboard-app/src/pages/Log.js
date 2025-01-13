@@ -7,9 +7,10 @@ import {
   Button,
   ListGroup,
   Form,
+  Badge,
 } from "react-bootstrap";
-import { db } from "../firebase/firebase"; // Import Firebase config
-import { collection, getDocs, addDoc } from "firebase/firestore";
+import { db } from "../firebase/firebase";
+import { collection, getDocs, addDoc, deleteDoc, doc } from "firebase/firestore";
 
 const DowntimeLog = () => {
   const [machine, setMachine] = useState("");
@@ -76,6 +77,15 @@ const DowntimeLog = () => {
     }
   };
 
+  const handleLogDelete = async (logId) => {
+    try {
+      await deleteDoc(doc(downtimeLogCollection, logId));
+      setLogs((prevLogs) => prevLogs.filter((log) => log.id !== logId));
+    } catch (err) {
+      console.error("Error deleting log:", err);
+    }
+  };
+
   return (
     <Container>
       <Row className="justify-content-md-center">
@@ -92,18 +102,10 @@ const DowntimeLog = () => {
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item onClick={() => setMachine("Machine 1")}>
-                  Machine 1
-                </Dropdown.Item>
-                <Dropdown.Item onClick={() => setMachine("Machine 2")}>
-                  Machine 2
-                </Dropdown.Item>
-                <Dropdown.Item onClick={() => setMachine("Machine 3")}>
-                  Machine 3
-                </Dropdown.Item>
-                <Dropdown.Item onClick={() => setMachine("Machine 4")}>
-                  Machine 4
-                </Dropdown.Item>
+                <Dropdown.Item onClick={() => setMachine("Machine 1")}>Machine 1</Dropdown.Item>
+                <Dropdown.Item onClick={() => setMachine("Machine 2")}>Machine 2</Dropdown.Item>
+                <Dropdown.Item onClick={() => setMachine("Machine 3")}>Machine 3</Dropdown.Item>
+                <Dropdown.Item onClick={() => setMachine("Machine 4")}>Machine 4</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>
@@ -185,6 +187,13 @@ const DowntimeLog = () => {
                       <br />
                       <strong>End Time:</strong> {log.endTime}
                     </div>
+                    <Badge
+                      bg="danger"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => handleLogDelete(log.id)}
+                    >
+                      -
+                    </Badge>
                   </ListGroup.Item>
                 ))}
               </ListGroup>
