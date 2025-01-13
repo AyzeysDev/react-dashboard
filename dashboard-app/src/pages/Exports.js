@@ -24,10 +24,7 @@ const Exports = () => {
         return;
       }
 
-      // Convert data to CSV using PapaParse
       const csv = Papa.unparse(machinesData);
-
-      // Trigger file download
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -42,14 +39,72 @@ const Exports = () => {
     }
   };
 
-  // Export Clients Data (Placeholder)
-  const handleExportClients = () => {
-    alert("Export Clients Data: This feature is under development.");
+  // Export Logs Data
+  const handleExportLogs = async () => {
+    try {
+      const logsCollection = collection(db, "downtimeLog");
+      const querySnapshot = await getDocs(logsCollection);
+
+      const logsData = [];
+      querySnapshot.forEach((doc) => {
+        logsData.push(doc.data()); // Use only the fields, skip the document ID
+      });
+
+      if (logsData.length === 0) {
+        alert("No downtime logs available to export.");
+        return;
+      }
+
+      const csv = Papa.unparse(logsData);
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", "downtime_logs.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error exporting downtime logs:", error);
+      alert("Failed to export downtime logs.");
+    }
   };
 
-  // Export Logs (Placeholder)
-  const handleExportLogs = () => {
-    alert("Export Logs: This feature is under development.");
+  const handleExportClients = async () => {
+    try {
+      const clientsCollection = collection(db, "clientsData");
+      const querySnapshot = await getDocs(clientsCollection);
+
+      const clientsData = [];
+      querySnapshot.forEach((doc) => {
+        const { clientName, clientOrderCount, deliveryDate, description, totalPay } = doc.data();
+        clientsData.push({
+          clientName,
+          clientOrderCount,
+          deliveryDate,
+          description,
+          totalPay,
+        });
+      });
+
+      if (clientsData.length === 0) {
+        alert("No client data available to export.");
+        return;
+      }
+
+      const csv = Papa.unparse(clientsData);
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", "clients_data.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error exporting client data:", error);
+      alert("Failed to export client data.");
+    }
   };
 
   return (
@@ -73,7 +128,6 @@ const Exports = () => {
           </Button>
         </Col>
       </Row>
-      {/* Button 2: Export Clients Data */}
       <Row className="justify-content-center mb-4">
         <Col xs={12} md={8}>
           <Button
@@ -87,7 +141,7 @@ const Exports = () => {
           </Button>
         </Col>
       </Row>
-      {/* Button 3: Export Log */}
+      {/* Button 2: Export Logs Data */}
       <Row className="justify-content-center mb-4">
         <Col xs={12} md={8}>
           <Button
@@ -97,7 +151,7 @@ const Exports = () => {
             className="d-flex align-items-center justify-content-center"
             style={{ gap: "10px" }} // Space between icon and text
           >
-            <i className="fa fa-clipboard"></i> Export Log
+            <i className="fa fa-clipboard"></i> Export Downtime Logs
           </Button>
         </Col>
       </Row>
