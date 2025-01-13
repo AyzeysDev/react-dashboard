@@ -1,59 +1,69 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import GaugeComponent from "react-gauge-component";
+import { db } from "../firebase/firebase"; // Your Firebase configuration
+import { collection, doc, getDocs, setDoc } from "firebase/firestore";
 
-const Machines = ({ initialMachineData }) => {
-  const [machineData, setMachineData] = useState(initialMachineData);
+const Machines = () => {
+  const [machineData, setMachineData] = useState({});
   const [addInputs, setAddInputs] = useState({});
   const [subtractInputs, setSubtractInputs] = useState({});
   const [totalInputs, setTotalInputs] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  const machinesCollection = collection(db, "machinesData");
 
   const getSubArcs = (totalCount) => [
-    {
-      limit: totalCount * 0.25,
-      color: "#EA4228",
-      showTick: true,
-    },
-    {
-      limit: totalCount * 0.5,
-      color: "#F58B19",
-      showTick: true,
-    },
-    {
-      limit: totalCount * 0.75,
-      color: "#F5CD19",
-      showTick: true,
-    },
-    {
-      limit: totalCount,
-      color: "#5BE12C",
-      showTick: true,
-    },
+    { limit: totalCount * 0.25, color: "#EA4228", showTick: true },
+    { limit: totalCount * 0.5, color: "#F58B19", showTick: true },
+    { limit: totalCount * 0.75, color: "#F5CD19", showTick: true },
+    { limit: totalCount, color: "#5BE12C", showTick: true },
   ];
+
+  // Fetch initial data from Firebase
+  useEffect(() => {
+    const fetchMachineData = async () => {
+      const querySnapshot = await getDocs(machinesCollection);
+      const data = {};
+      querySnapshot.forEach((doc) => {
+        data[doc.id] = doc.data();
+      });
+      setMachineData(data);
+      setLoading(false);
+    };
+    fetchMachineData();
+  }, []);
+
+  const updateFirestore = async (machine, updatedData) => {
+    try {
+      const machineDoc = doc(machinesCollection, machine);
+      await setDoc(machineDoc, updatedData);
+    } catch (error) {
+      console.error("Error updating Firestore:", error);
+    }
+  };
 
   const updateTotalCount = (machine) => {
     if (totalInputs[machine] !== undefined) {
-      setMachineData((prevData) => ({
-        ...prevData,
-        [machine]: {
-          ...prevData[machine],
-          totalCount: Math.max(totalInputs[machine], 0),
-        },
-      }));
+      const updatedMachine = {
+        ...machineData[machine],
+        totalCount: Math.max(totalInputs[machine], 0),
+      };
+      setMachineData((prevData) => ({ ...prevData, [machine]: updatedMachine }));
+      updateFirestore(machine, updatedMachine);
       setTotalInputs((prevInputs) => ({ ...prevInputs, [machine]: "" }));
     }
   };
 
   const updateProgress = (machine, adjustment) => {
-    setMachineData((prevData) => ({
-      ...prevData,
-      [machine]: {
-        ...prevData[machine],
-        value: Math.max(
-          0,
-          Math.min(prevData[machine].value + adjustment, prevData[machine].totalCount)
-        ),
-      },
-    }));
+    const updatedMachine = {
+      ...machineData[machine],
+      value: Math.max(
+        0,
+        Math.min(machineData[machine].value + adjustment, machineData[machine].totalCount)
+      ),
+    };
+    setMachineData((prevData) => ({ ...prevData, [machine]: updatedMachine }));
+    updateFirestore(machine, updatedMachine);
   };
 
   const handleInputChange = (setter, machine, value) => {
@@ -62,6 +72,8 @@ const Machines = ({ initialMachineData }) => {
       [machine]: parseInt(value) || 0,
     }));
   };
+
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div style={{ padding: "20px" }}>
@@ -76,8 +88,8 @@ const Machines = ({ initialMachineData }) => {
               arc={{
                 subArcs: getSubArcs(machineData[machine].totalCount),
               }}
-              // width={250} // Increased width
-              // height={250} // Increased height
+              width={300}
+              height={300}
               labels={{
                 valueLabel: {
                   format: (value) => `${value}/${machineData[machine].totalCount}`,
