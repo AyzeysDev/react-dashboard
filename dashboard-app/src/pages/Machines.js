@@ -62,7 +62,10 @@ const Machines = () => {
       ...machineData[machine],
       value: Math.max(
         0,
-        Math.min(machineData[machine].value + adjustment, machineData[machine].totalCount)
+        Math.min(
+          machineData[machine].value + adjustment,
+          machineData[machine].totalCount
+        )
       ),
     };
     setMachineData((prevData) => ({ ...prevData, [machine]: updatedMachine }));
@@ -80,7 +83,13 @@ const Machines = () => {
 
   return (
     <div style={{ padding: "20px" }}>
-      <div style={{ display: "flex", justifyContent: "space-around", flexWrap: "wrap" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-around",
+          flexWrap: "wrap",
+        }}
+      >
         {Object.keys(machineData).map((machine, index) => (
           <div key={machine} style={{ textAlign: "center", margin: "20px" }}>
             <h4>Machine {index + 1}</h4>
@@ -91,11 +100,12 @@ const Machines = () => {
               arc={{
                 subArcs: getSubArcs(machineData[machine].totalCount),
               }}
-              width={300}
-              height={300}
+              // width={600}
+              // height={300}
               labels={{
                 valueLabel: {
-                  format: (value) => `${value}/${machineData[machine].totalCount}`,
+                  format: (value) =>
+                    `${value}/${machineData[machine].totalCount}`,
                   fontSize: "16px",
                   color: "#333",
                 },
@@ -103,14 +113,26 @@ const Machines = () => {
             />
             <div style={{ marginTop: "15px" }}>
               {/* Total Count Update */}
-              <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "10px",
+                }}
+              >
                 <input
                   type="number"
                   placeholder="New Total"
                   value={totalInputs[machine] || ""}
-                  min="0"
-                  style={{ padding: "5px", marginRight: "10px", width: "100px" }}
-                  onChange={(e) => handleInputChange(setTotalInputs, machine, e.target.value)}
+                  min="1"
+                  style={{
+                    padding: "5px",
+                    marginRight: "10px",
+                    width: "100px",
+                  }}
+                  onChange={(e) =>
+                    handleInputChange(setTotalInputs, machine, e.target.value)
+                  }
                 />
                 <button
                   style={{
@@ -120,21 +142,38 @@ const Machines = () => {
                     border: "none",
                     borderRadius: "5px",
                     marginLeft: "5px",
+                    cursor:
+                      totalInputs[machine] > 0 ? "pointer" : "not-allowed",
+                    opacity: totalInputs[machine] > 0 ? "1" : "0.5",
                   }}
                   onClick={() => updateTotalCount(machine)}
+                  disabled={!(totalInputs[machine] > 0)} // Disable if totalInputs is invalid
                 >
                   Order Count
                 </button>
               </div>
+
               {/* Add Progress */}
-              <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "10px",
+                }}
+              >
                 <input
                   type="number"
                   placeholder="Add"
                   value={addInputs[machine] || ""}
                   min="0"
-                  style={{ padding: "5px", marginRight: "10px", width: "100px" }}
-                  onChange={(e) => handleInputChange(setAddInputs, machine, e.target.value)}
+                  style={{
+                    padding: "5px",
+                    marginRight: "10px",
+                    width: "100px",
+                  }}
+                  onChange={(e) =>
+                    handleInputChange(setAddInputs, machine, e.target.value)
+                  }
                 />
                 <button
                   style={{
@@ -160,8 +199,18 @@ const Machines = () => {
                   placeholder="Remove"
                   value={subtractInputs[machine] || ""}
                   min="0"
-                  style={{ padding: "5px", marginRight: "10px", width: "100px" }}
-                  onChange={(e) => handleInputChange(setSubtractInputs, machine, e.target.value)}
+                  style={{
+                    padding: "5px",
+                    marginRight: "10px",
+                    width: "100px",
+                  }}
+                  onChange={(e) =>
+                    handleInputChange(
+                      setSubtractInputs,
+                      machine,
+                      e.target.value
+                    )
+                  }
                 />
                 <button
                   style={{
