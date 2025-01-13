@@ -97,7 +97,7 @@ const Machines = () => {
         <button
           style={{
             backgroundColor: "transparent", // Transparent background for outline effect
-            color: 'green', // Green text color
+            color: "green", // Green text color
             border: "2px solid green", // Green border
             padding: "10px 20px", // Padding for the button
             borderRadius: "5px", // Rounded corners
@@ -143,16 +143,31 @@ const Machines = () => {
               maxValue={machineData[machine].totalCount}
               arc={{
                 subArcs: getSubArcs(machineData[machine].totalCount),
+                width: 0.3,
               }}
-              width={300} // Increased width
-              height={150} // Adjusted height
               labels={{
                 valueLabel: {
-                  format: (value) =>
+                  formatTextValue: (value) =>
                     `${value}/${machineData[machine].totalCount}`,
-                  fontSize: "16px",
-                  color: "#333",
+                  style: {
+                    fontSize: "27px", // Adjusted font size
+                    fill: "#000000", // Dark black color
+                    textShadow: "none", // Removed default shadow for a clean look
+                  },
                 },
+              }}
+              // marginInPercent={{
+              //   top: 0.05,
+              //   bottom: 0.05,
+              //   left: 0.05,
+              //   right: 0.05,
+              // }} 
+              pointer={{
+                type: "arrow",
+                color: "#464A4F",
+                animate: true,
+                length: 0.8, // Adjust pointer length
+                width: 30, // Adjust pointer width
               }}
             />
             <div style={{ marginTop: "15px" }}>
@@ -226,6 +241,7 @@ const Machines = () => {
                     color: "white",
                     border: "none",
                     borderRadius: "5px",
+                    marginLeft: "5px",
                   }}
                   onClick={() => {
                     updateProgress(machine, addInputs[machine] || 0);
@@ -263,6 +279,7 @@ const Machines = () => {
                     color: "white",
                     border: "none",
                     borderRadius: "5px",
+                    marginLeft: "5px",
                   }}
                   onClick={() => {
                     updateProgress(machine, -(subtractInputs[machine] || 0));
