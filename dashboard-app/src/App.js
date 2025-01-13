@@ -10,7 +10,6 @@ import Home from "./pages/Home";
 import Clients from "./pages/Clients";
 import ClientHub from "./pages/ClientHub";
 import Machines from "./pages/Machines";
-import Production from "./pages/Production";
 
 function App() {
   const [clients, setClients] = useState([]);
@@ -84,7 +83,6 @@ function App() {
                     />
                   }
                 />
-                <Route path="/production" element={<Production />} />
               </Routes>
             </Container>
           </main>

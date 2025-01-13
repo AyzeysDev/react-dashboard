@@ -9,6 +9,7 @@ const Machines = () => {
   const [subtractInputs, setSubtractInputs] = useState({});
   const [totalInputs, setTotalInputs] = useState({});
   const [loading, setLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false); // Track save operation status
 
   const machinesCollection = collection(db, "machinesData");
 
@@ -33,12 +34,19 @@ const Machines = () => {
     fetchMachineData();
   }, []);
 
-  const updateFirestore = async (machine, updatedData) => {
+  const saveProgressToDatabase = async () => {
+    setIsSaving(true);
     try {
-      const machineDoc = doc(machinesCollection, machine);
-      await setDoc(machineDoc, updatedData);
+      for (const machine in machineData) {
+        const machineDoc = doc(machinesCollection, machine);
+        await setDoc(machineDoc, machineData[machine]);
+      }
+      // alert("Progress saved successfully!");
     } catch (error) {
-      console.error("Error updating Firestore:", error);
+      console.error("Error saving progress:", error);
+      alert("Failed to save progress. Please try again.");
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -58,18 +66,19 @@ const Machines = () => {
   };
 
   const updateProgress = (machine, adjustment) => {
-    const updatedMachine = {
-      ...machineData[machine],
-      value: Math.max(
-        0,
-        Math.min(
-          machineData[machine].value + adjustment,
-          machineData[machine].totalCount
-        )
-      ),
-    };
-    setMachineData((prevData) => ({ ...prevData, [machine]: updatedMachine }));
-    updateFirestore(machine, updatedMachine);
+    setMachineData((prevData) => ({
+      ...prevData,
+      [machine]: {
+        ...prevData[machine],
+        value: Math.max(
+          0,
+          Math.min(
+            prevData[machine].value + adjustment,
+            prevData[machine].totalCount
+          )
+        ),
+      },
+    }));
   };
 
   const handleInputChange = (setter, machine, value) => {
@@ -83,6 +92,34 @@ const Machines = () => {
 
   return (
     <div style={{ padding: "20px" }}>
+      {/* Save Progress Button */}
+      <div style={{ textAlign: "center", marginBottom: "20px" }}>
+        <button
+          style={{
+            backgroundColor: "transparent", // Transparent background for outline effect
+            color: 'green', // Green text color
+            border: "2px solid green", // Green border
+            padding: "10px 20px", // Padding for the button
+            borderRadius: "5px", // Rounded corners
+            cursor: "pointer", // Pointer cursor for interactivity
+            fontSize: "16px", // Font size
+            transition: "all 0.3s ease", // Smooth hover effect
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = "#31ad47"; // Hover background
+            e.target.style.color = "white"; // Hover text color
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = "transparent"; // Revert background
+            e.target.style.color = "#31ad47"; // Revert text color
+          }}
+          onClick={saveProgressToDatabase}
+          disabled={isSaving}
+        >
+          {isSaving ? "Saving..." : "Save Progress"}
+        </button>
+      </div>
+
       <div
         style={{
           display: "flex",
@@ -91,7 +128,14 @@ const Machines = () => {
         }}
       >
         {Object.keys(machineData).map((machine, index) => (
-          <div key={machine} style={{ textAlign: "center", margin: "20px" }}>
+          <div
+            key={machine}
+            style={{
+              textAlign: "center",
+              margin: "20px",
+              width: "300px",
+            }}
+          >
             <h4>Machine {index + 1}</h4>
             <GaugeComponent
               value={machineData[machine].value}
@@ -100,8 +144,8 @@ const Machines = () => {
               arc={{
                 subArcs: getSubArcs(machineData[machine].totalCount),
               }}
-              // width={600}
-              // height={300}
+              width={300} // Increased width
+              height={150} // Adjusted height
               labels={{
                 valueLabel: {
                   format: (value) =>
@@ -122,13 +166,13 @@ const Machines = () => {
               >
                 <input
                   type="number"
-                  placeholder="New Total"
+                  placeholder="Total"
                   value={totalInputs[machine] || ""}
                   min="1"
                   style={{
                     padding: "5px",
                     marginRight: "10px",
-                    width: "100px",
+                    width: "80px",
                   }}
                   onChange={(e) =>
                     handleInputChange(setTotalInputs, machine, e.target.value)
@@ -169,7 +213,7 @@ const Machines = () => {
                   style={{
                     padding: "5px",
                     marginRight: "10px",
-                    width: "100px",
+                    width: "80px",
                   }}
                   onChange={(e) =>
                     handleInputChange(setAddInputs, machine, e.target.value)
@@ -182,7 +226,6 @@ const Machines = () => {
                     color: "white",
                     border: "none",
                     borderRadius: "5px",
-                    marginLeft: "5px",
                   }}
                   onClick={() => {
                     updateProgress(machine, addInputs[machine] || 0);
@@ -192,6 +235,7 @@ const Machines = () => {
                   Log Production
                 </button>
               </div>
+
               {/* Subtract Progress */}
               <div style={{ display: "flex", alignItems: "center" }}>
                 <input
@@ -202,7 +246,7 @@ const Machines = () => {
                   style={{
                     padding: "5px",
                     marginRight: "10px",
-                    width: "100px",
+                    width: "80px",
                   }}
                   onChange={(e) =>
                     handleInputChange(
@@ -219,7 +263,6 @@ const Machines = () => {
                     color: "white",
                     border: "none",
                     borderRadius: "5px",
-                    marginLeft: "5px",
                   }}
                   onClick={() => {
                     updateProgress(machine, -(subtractInputs[machine] || 0));

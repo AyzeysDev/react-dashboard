@@ -29,9 +29,9 @@ const Header = () => {
                   <Nav.Link as={Link} to="/machines">
                     <i className="fa fa-cogs"></i> Machines
                   </Nav.Link>
-                  <Nav.Link as={Link} to="/production">
+                  {/* <Nav.Link as={Link} to="/production">
                     <i className="fa fa-industry"></i> Production
-                  </Nav.Link>
+                  </Nav.Link> */}
                   <Nav.Link as={Link} to="/clients">
                     <i className="fa fa-users"></i> Clients
                   </Nav.Link>
