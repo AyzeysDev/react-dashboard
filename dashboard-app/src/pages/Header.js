@@ -9,7 +9,14 @@ const Header = () => {
 
   return (
     <header>
-      <Navbar bg="light" className="bg-body-tertiary" data-bs-theme="light" variant="light" expand="lg" collapseOnSelect>
+      <Navbar
+        bg="light"
+        className="bg-body-tertiary"
+        data-bs-theme="light"
+        variant="light"
+        expand="lg"
+        collapseOnSelect
+      >
         <Container>
           {/* Company Name */}
           <Navbar.Brand>
@@ -37,6 +44,9 @@ const Header = () => {
                   </Nav.Link>
                   <Nav.Link as={Link} to="/log">
                     <i className="fa fa-clipboard"></i> Log
+                  </Nav.Link>
+                  <Nav.Link as={Link} to="/exports">
+                    <i className="fa fa-file-export"></i> Exports
                   </Nav.Link>
                   <Nav.Link as={Link} to="/">
                     <i className="fa fa-sign-out-alt"></i> Exit

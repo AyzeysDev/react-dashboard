@@ -11,6 +11,8 @@ import Clients from "./pages/Clients";
 import ClientHub from "./pages/ClientHub";
 import Machines from "./pages/Machines";
 import Log from "./pages/Log";
+import Exports from "./pages/Exports";
+
 
 function App() {
   const [clients, setClients] = useState([]);
@@ -85,6 +87,7 @@ function App() {
                   }
                 />
                 <Route path="/log" element={<Log />} />
+                <Route path="/exports" element={<Exports />} />
               </Routes>
             </Container>
           </main>

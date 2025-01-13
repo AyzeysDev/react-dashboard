@@ -1,26 +1,78 @@
-import React, { useState } from "react";
-import { Container, Row, Col, Dropdown, Button } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import {
+  Container,
+  Row,
+  Col,
+  Dropdown,
+  Button,
+  ListGroup,
+  Form,
+} from "react-bootstrap";
+import { db } from "../firebase/firebase"; // Import Firebase config
+import { collection, getDocs, addDoc } from "firebase/firestore";
 
 const DowntimeLog = () => {
   const [machine, setMachine] = useState("");
   const [cause, setCause] = useState("");
   const [logs, setLogs] = useState([]);
-  const [dateTime, setDateTime] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [date, setDate] = useState("");
+  const [error, setError] = useState("");
 
-  const handleLogSubmit = () => {
-    if (machine && cause && dateTime) {
+  const downtimeLogCollection = collection(db, "downtimeLog");
+
+  // Fetch logs from Firestore when the component loads
+  useEffect(() => {
+    const fetchLogs = async () => {
+      try {
+        const querySnapshot = await getDocs(downtimeLogCollection);
+        const logsData = [];
+        querySnapshot.forEach((doc) => {
+          logsData.push({ id: doc.id, ...doc.data() });
+        });
+        // Sort logs in descending order of date and time
+        logsData.sort((a, b) => new Date(b.date + "T" + b.startTime) - new Date(a.date + "T" + a.startTime));
+        setLogs(logsData);
+      } catch (err) {
+        console.error("Error fetching logs:", err);
+      }
+    };
+
+    fetchLogs();
+  }, []);
+
+  const handleLogSubmit = async () => {
+    setError("");
+    if (machine && cause && date && startTime && endTime) {
       const newLog = {
-        id: logs.length + 1,
         machine,
         cause,
-        dateTime,
+        date,
+        startTime,
+        endTime,
       };
-      setLogs((prevLogs) => [...prevLogs, newLog]);
-      setMachine("");
-      setCause("");
-      setDateTime("");
+
+      try {
+        // Save to Firestore
+        const docRef = await addDoc(downtimeLogCollection, newLog);
+
+        // Update local state with Firestore ID
+        setLogs((prevLogs) => [
+          { id: docRef.id, ...newLog },
+          ...prevLogs, // Prepend to maintain descending order
+        ]);
+        setMachine("");
+        setCause("");
+        setDate("");
+        setStartTime("");
+        setEndTime("");
+      } catch (err) {
+        setError("Error saving log to database.");
+        console.error(err);
+      }
     } else {
-      alert("Please fill all the fields");
+      setError("Please fill out all fields before submitting.");
     }
   };
 
@@ -28,12 +80,14 @@ const DowntimeLog = () => {
     <Container>
       <Row className="justify-content-md-center">
         <Col xs={12} md={8}>
-          <h2 className="mb-4">Downtime Log</h2>
+          <h2 className="mb-4 text-center">Downtime Log</h2>
+
+          {error && <p className="text-danger">{error}</p>}
 
           {/* Dropdown for Machines */}
           <div className="mb-3">
             <Dropdown>
-              <Dropdown.Toggle variant="warning" id="dropdown-basic">
+              <Dropdown.Toggle variant="outline-warning" id="dropdown-basic">
                 {machine || "Select Machine"}
               </Dropdown.Toggle>
 
@@ -56,35 +110,55 @@ const DowntimeLog = () => {
 
           {/* Cause Input */}
           <div className="mb-3">
-            <label htmlFor="cause" className="form-label">
-              Cause
-            </label>
-            <input
-              type="text"
-              id="cause"
-              className="form-control"
-              placeholder="Enter cause"
-              value={cause}
-              onChange={(e) => setCause(e.target.value)}
-            />
+            <Form.Group>
+              <Form.Label>Cause</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter cause"
+                value={cause}
+                onChange={(e) => setCause(e.target.value)}
+              />
+            </Form.Group>
           </div>
 
-          {/* Date and Time Input */}
+          {/* Date Input */}
           <div className="mb-3">
-            <label htmlFor="dateTime" className="form-label">
-              Date and Time
-            </label>
-            <input
-              type="datetime-local"
-              id="dateTime"
-              className="form-control"
-              value={dateTime}
-              onChange={(e) => setDateTime(e.target.value)}
-            />
+            <Form.Group>
+              <Form.Label>Date</Form.Label>
+              <Form.Control
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+              />
+            </Form.Group>
+          </div>
+
+          {/* Start Time Input */}
+          <div className="mb-3">
+            <Form.Group>
+              <Form.Label>Start Time</Form.Label>
+              <Form.Control
+                type="time"
+                value={startTime}
+                onChange={(e) => setStartTime(e.target.value)}
+              />
+            </Form.Group>
+          </div>
+
+          {/* End Time Input */}
+          <div className="mb-3">
+            <Form.Group>
+              <Form.Label>End Time</Form.Label>
+              <Form.Control
+                type="time"
+                value={endTime}
+                onChange={(e) => setEndTime(e.target.value)}
+              />
+            </Form.Group>
           </div>
 
           {/* Submit Button */}
-          <Button variant="primary" onClick={handleLogSubmit}>
+          <Button variant="success" onClick={handleLogSubmit}>
             Enter Log
           </Button>
 
@@ -94,15 +168,26 @@ const DowntimeLog = () => {
             {logs.length === 0 ? (
               <p>No logs available</p>
             ) : (
-              <ul className="list-group">
+              <ListGroup as="ol" numbered>
                 {logs.map((log) => (
-                  <li key={log.id} className="list-group-item">
-                    <strong>ID:</strong> {log.id} | <strong>Machine:</strong>{" "}
-                    {log.machine} | <strong>Cause:</strong> {log.cause} |{" "}
-                    <strong>Date/Time:</strong> {log.dateTime}
-                  </li>
+                  <ListGroup.Item
+                    as="li"
+                    key={log.id}
+                    className="d-flex justify-content-between align-items-start"
+                  >
+                    <div className="ms-2 me-auto">
+                      <div className="fw-bold">Machine: {log.machine}</div>
+                      <strong>Cause:</strong> {log.cause}
+                      <br />
+                      <strong>Date:</strong> {log.date}
+                      <br />
+                      <strong>Start Time:</strong> {log.startTime}
+                      <br />
+                      <strong>End Time:</strong> {log.endTime}
+                    </div>
+                  </ListGroup.Item>
                 ))}
-              </ul>
+              </ListGroup>
             )}
           </div>
         </Col>

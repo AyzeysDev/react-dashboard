@@ -11,7 +11,7 @@ body {
   margin: 100px auto;
   padding: 30px;
   text-align: center;
-  background: linear-gradient(145deg, #D8B5FF  , #1EAE98 );
+  background: linear-gradient(145deg, #bdc3c7   , #2c3e50 );
   border-radius: 15px;
   box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
   font-family: "Roboto", sans-serif; /* Modern font */
@@ -20,7 +20,7 @@ body {
 
 /* Styling for the brand name in LoginSignup */
 .login-container h1 {
-  color: #025483; /* Red color for the brand */
+  color: #f9c76a; /* Red color for the brand */
   font-size: 28px;
   font-weight: bold;
   text-shadow: 1px 1px 2px rgba(1, 146, 204, 0.1); /* Optional subtle shadow */
