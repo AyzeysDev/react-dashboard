@@ -1,50 +1,53 @@
 import React from "react";
-import { Chart } from "react-google-charts";
+import GaugeComponent from "react-gauge-component";
 
 const Machines = ({ machineData }) => {
-  // Prepare old and new data for the chart
-  const dataOld = [
-    ["Machine", "Total Count"],
-    ...Object.keys(machineData).map((machine, index) => [
-      `Machine ${index + 1}`,
-      machineData[machine].totalCount,
-    ]),
-  ];
-
-  const dataNew = [
-    ["Machine", "Completed Count"],
-    ...Object.keys(machineData).map((machine, index) => [
-      `Machine ${index + 1}`,
-      machineData[machine].value,
-    ]),
-  ];
-
-  const diffdata = {
-    old: dataOld,
-    new: dataNew,
-  };
-
-  const options = {
-    title: "Machine Production Progress (Total vs Completed)",
-    hAxis: {
-      title: "Machines",
+  const getSubArcs = (totalCount) => [
+    {
+      limit: totalCount * 0.2,
+      color: "#EA4228",
+      showTick: true,
     },
-    vAxis: {
-      title: "Count",
+    {
+      limit: totalCount * 0.4,
+      color: "#F58B19",
+      showTick: true,
     },
-    chartArea: { width: "80%", height: "70%" },
-    colors: ["#1f77b4", "#ff7f0e"], // Blue for Total, Orange for Completed
-    legend: { position: "bottom" },
-  };
+    {
+      limit: totalCount * 0.6,
+      color: "#F5CD19",
+      showTick: true,
+    },
+    {
+      limit: totalCount,
+      color: "#5BE12C",
+      showTick: true,
+    },
+  ];
 
   return (
-    <Chart
-      chartType="ColumnChart"
-      width="100%"
-      height="600px"
-      diffdata={diffdata}
-      options={options}
-    />
+    <div style={{ display: "flex", justifyContent: "space-around", flexWrap: "wrap" }}>
+      {Object.keys(machineData).map((machine, index) => (
+        <div key={machine} style={{ textAlign: "center", margin: "20px" }}>
+          <h3>Machine {index + 1}</h3>
+          <GaugeComponent
+            value={machineData[machine].value}
+            minValue={0} // Set the minimum value for the gauge
+            maxValue={machineData[machine].totalCount} // Dynamically set the maximum value based on totalCount
+            arc={{
+              subArcs: getSubArcs(machineData[machine].totalCount),
+            }}
+            labels={{
+              valueLabel: {
+                format: (value) => `${value}/${machineData[machine].totalCount}`,
+                fontSize: "16px",
+                color: "#333",
+              },
+            }}
+          />
+        </div>
+      ))}
+    </div>
   );
 };
 

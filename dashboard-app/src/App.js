@@ -12,8 +12,8 @@ import Production from "./pages/Production";
 
 function App() {
   const [clients, setClients] = useState([]);
-  const [machineData, setMachineData] = useState({
-    machine1: { value: 0, totalCount: 100 },
+  const [machineData] = useState({
+    machine1: { value: 0, totalCount: 254 },
     machine2: { value: 70, totalCount: 150 },
     machine3: { value: 120, totalCount: 200 },
     machine4: { value: 200, totalCount: 250 },
@@ -22,18 +22,6 @@ function App() {
   // Handle form submission for clients
   const handleOnSubmit = (client) => {
     setClients((prevClients) => [...prevClients, client]);
-  };
-
-  // Update machine data from Production page inputs
-  const updateMachineData = (machine, value) => {
-    setMachineData((prevData) => ({
-      ...prevData,
-      [machine]: {
-        ...prevData[machine],
-        value,
-        totalCount: Math.max(value, prevData[machine].totalCount), // Update totalCount dynamically
-      },
-    }));
   };
 
   return (
@@ -53,10 +41,7 @@ function App() {
                   path="/machines"
                   element={<Machines machineData={machineData} />}
                 />
-                <Route
-                  path="/production"
-                  element={<Production updateMachineData={updateMachineData} />}
-                />
+                <Route path="/production" element={<Production />} />
               </Routes>
             </Container>
           </main>
