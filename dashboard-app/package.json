@@ -8,6 +8,7 @@
     "bootstrap": "^5.3.3",
     "cra-template-redux": "2.0.0",
     "firebase": "^11.1.0",
+    "papaparse": "^5.5.1",
     "react": "^18.0.0",
     "react-bootstrap": "^2.10.7",
     "react-dom": "^18.0.0",
