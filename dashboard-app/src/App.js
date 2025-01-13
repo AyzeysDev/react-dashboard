@@ -13,10 +13,10 @@ import Production from "./pages/Production";
 function App() {
   const [clients, setClients] = useState([]);
   const [machineData] = useState({
-    machine1: { value: 0, totalCount: 100 },
-    machine2: { value: 0, totalCount: 100 },
-    machine3: { value: 0, totalCount: 100 },
-    machine4: { value: 0, totalCount: 100 },
+    machine1: { value: 0, totalCount: 1 },
+    machine2: { value: 0, totalCount: 1 },
+    machine3: { value: 0, totalCount: 1 },
+    machine4: { value: 0, totalCount: 1 },
   });
 
   // Handle form submission for clients

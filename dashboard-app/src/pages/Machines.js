@@ -3,21 +3,22 @@ import GaugeComponent from "react-gauge-component";
 
 const Machines = ({ initialMachineData }) => {
   const [machineData, setMachineData] = useState(initialMachineData);
-  const [inputs, setInputs] = useState({}); // Track individual inputs for progress
+  const [addInputs, setAddInputs] = useState({}); // Track inputs for "Add Progress"
+  const [subtractInputs, setSubtractInputs] = useState({}); // Track inputs for "Subtract Progress"
 
   const getSubArcs = (totalCount) => [
     {
-      limit: totalCount * 0.2,
+      limit: totalCount * 0.25,
       color: "#EA4228",
       showTick: true,
     },
     {
-      limit: totalCount * 0.4,
+      limit: totalCount * 0.5,
       color: "#F58B19",
       showTick: true,
     },
     {
-      limit: totalCount * 0.6,
+      limit: totalCount * 0.75,
       color: "#F5CD19",
       showTick: true,
     },
@@ -51,8 +52,15 @@ const Machines = ({ initialMachineData }) => {
     }));
   };
 
-  const handleInputChange = (machine, value) => {
-    setInputs((prevInputs) => ({
+  const handleAddInputChange = (machine, value) => {
+    setAddInputs((prevInputs) => ({
+      ...prevInputs,
+      [machine]: parseInt(value) || 0,
+    }));
+  };
+
+  const handleSubtractInputChange = (machine, value) => {
+    setSubtractInputs((prevInputs) => ({
       ...prevInputs,
       [machine]: parseInt(value) || 0,
     }));
@@ -81,11 +89,11 @@ const Machines = ({ initialMachineData }) => {
             />
             <div style={{ marginTop: "15px" }}>
               {/* Total Count Update */}
-              <div>
+              <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
                 <input
                   type="number"
                   placeholder="New Total"
-                  style={{ padding: "5px", marginRight: "5px", width: "100px" }}
+                  style={{ padding: "5px", marginRight: "10px", width: "100px" }}
                   onChange={(e) =>
                     updateTotalCount(machine, parseInt(e.target.value) || machineData[machine].totalCount)
                   }
@@ -97,7 +105,6 @@ const Machines = ({ initialMachineData }) => {
                     color: "white",
                     border: "none",
                     borderRadius: "5px",
-                    marginLeft: "5px",
                   }}
                   onClick={() =>
                     updateTotalCount(
@@ -109,14 +116,14 @@ const Machines = ({ initialMachineData }) => {
                   Set Total
                 </button>
               </div>
-              {/* Progress Update */}
-              <div style={{ marginTop: "10px" }}>
+              {/* Add Progress */}
+              <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
                 <input
                   type="number"
-                  placeholder="Enter Progress"
-                  value={inputs[machine] || ""}
-                  style={{ padding: "5px", marginRight: "5px", width: "100px" }}
-                  onChange={(e) => handleInputChange(machine, e.target.value)}
+                  placeholder="Add Progress"
+                  value={addInputs[machine] || ""}
+                  style={{ padding: "5px", marginRight: "10px", width: "100px" }}
+                  onChange={(e) => handleAddInputChange(machine, e.target.value)}
                 />
                 <button
                   style={{
@@ -128,12 +135,22 @@ const Machines = ({ initialMachineData }) => {
                     marginLeft: "5px",
                   }}
                   onClick={() => {
-                    updateProgress(machine, inputs[machine] || 0);
-                    setInputs((prev) => ({ ...prev, [machine]: "" })); // Clear input after addition
+                    updateProgress(machine, addInputs[machine] || 0);
+                    setAddInputs((prev) => ({ ...prev, [machine]: "" })); // Clear input after addition
                   }}
                 >
                   Add Progress
                 </button>
+              </div>
+              {/* Subtract Progress */}
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <input
+                  type="number"
+                  placeholder="Subtract Progress"
+                  value={subtractInputs[machine] || ""}
+                  style={{ padding: "5px", marginRight: "10px", width: "100px" }}
+                  onChange={(e) => handleSubtractInputChange(machine, e.target.value)}
+                />
                 <button
                   style={{
                     padding: "5px 10px",
@@ -144,8 +161,8 @@ const Machines = ({ initialMachineData }) => {
                     marginLeft: "5px",
                   }}
                   onClick={() => {
-                    updateProgress(machine, -(inputs[machine] || 0)); // Subtract progress
-                    setInputs((prev) => ({ ...prev, [machine]: "" })); // Clear input after subtraction
+                    updateProgress(machine, -(subtractInputs[machine] || 0)); // Subtract progress
+                    setSubtractInputs((prev) => ({ ...prev, [machine]: "" })); // Clear input after subtraction
                   }}
                 >
                   Subtract Progress
