@@ -43,14 +43,17 @@ const Machines = () => {
   };
 
   const updateTotalCount = (machine) => {
-    if (totalInputs[machine] !== undefined) {
-      const updatedMachine = {
-        ...machineData[machine],
-        totalCount: Math.max(totalInputs[machine], 0),
-      };
-      setMachineData((prevData) => ({ ...prevData, [machine]: updatedMachine }));
-      updateFirestore(machine, updatedMachine);
+    if (totalInputs[machine] !== undefined && totalInputs[machine] > 0) {
+      setMachineData((prevData) => ({
+        ...prevData,
+        [machine]: {
+          ...prevData[machine],
+          totalCount: totalInputs[machine],
+        },
+      }));
       setTotalInputs((prevInputs) => ({ ...prevInputs, [machine]: "" }));
+    } else {
+      alert("Please enter a valid total count greater than 0.");
     }
   };
 
