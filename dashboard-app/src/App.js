@@ -13,10 +13,10 @@ import Production from "./pages/Production";
 function App() {
   const [clients, setClients] = useState([]);
   const [machineData] = useState({
-    machine1: { value: 0, totalCount: 254 },
-    machine2: { value: 70, totalCount: 150 },
-    machine3: { value: 120, totalCount: 200 },
-    machine4: { value: 200, totalCount: 250 },
+    machine1: { value: 0, totalCount: 100 },
+    machine2: { value: 0, totalCount: 100 },
+    machine3: { value: 0, totalCount: 100 },
+    machine4: { value: 0, totalCount: 100 },
   });
 
   // Handle form submission for clients
@@ -39,7 +39,7 @@ function App() {
                 <Route path="/client-hub" element={<ClientHub clients={clients} />} />
                 <Route
                   path="/machines"
-                  element={<Machines machineData={machineData} />}
+                  element={<Machines initialMachineData={machineData} />}
                 />
                 <Route path="/production" element={<Production />} />
               </Routes>
