@@ -3,22 +3,23 @@ import GaugeComponent from "react-gauge-component";
 
 const Machines = ({ initialMachineData }) => {
   const [machineData, setMachineData] = useState(initialMachineData);
-  const [addInputs, setAddInputs] = useState({}); // Track inputs for "Add Progress"
-  const [subtractInputs, setSubtractInputs] = useState({}); // Track inputs for "Subtract Progress"
+  const [addInputs, setAddInputs] = useState({});
+  const [subtractInputs, setSubtractInputs] = useState({});
+  const [totalInputs, setTotalInputs] = useState({});
 
   const getSubArcs = (totalCount) => [
     {
-      limit: totalCount * 0.25,
+      limit: totalCount * 0.2,
       color: "#EA4228",
       showTick: true,
     },
     {
-      limit: totalCount * 0.5,
+      limit: totalCount * 0.4,
       color: "#F58B19",
       showTick: true,
     },
     {
-      limit: totalCount * 0.75,
+      limit: totalCount * 0.6,
       color: "#F5CD19",
       showTick: true,
     },
@@ -29,14 +30,17 @@ const Machines = ({ initialMachineData }) => {
     },
   ];
 
-  const updateTotalCount = (machine, newTotalCount) => {
-    setMachineData((prevData) => ({
-      ...prevData,
-      [machine]: {
-        ...prevData[machine],
-        totalCount: Math.max(newTotalCount, 0), // Ensure totalCount is non-negative
-      },
-    }));
+  const updateTotalCount = (machine) => {
+    if (totalInputs[machine] !== undefined) {
+      setMachineData((prevData) => ({
+        ...prevData,
+        [machine]: {
+          ...prevData[machine],
+          totalCount: Math.max(totalInputs[machine], 0),
+        },
+      }));
+      setTotalInputs((prevInputs) => ({ ...prevInputs, [machine]: "" }));
+    }
   };
 
   const updateProgress = (machine, adjustment) => {
@@ -46,21 +50,14 @@ const Machines = ({ initialMachineData }) => {
         ...prevData[machine],
         value: Math.max(
           0,
-          Math.min(prevData[machine].value + adjustment, prevData[machine].totalCount) // Clamp progress
+          Math.min(prevData[machine].value + adjustment, prevData[machine].totalCount)
         ),
       },
     }));
   };
 
-  const handleAddInputChange = (machine, value) => {
-    setAddInputs((prevInputs) => ({
-      ...prevInputs,
-      [machine]: parseInt(value) || 0,
-    }));
-  };
-
-  const handleSubtractInputChange = (machine, value) => {
-    setSubtractInputs((prevInputs) => ({
+  const handleInputChange = (setter, machine, value) => {
+    setter((prevInputs) => ({
       ...prevInputs,
       [machine]: parseInt(value) || 0,
     }));
@@ -93,10 +90,10 @@ const Machines = ({ initialMachineData }) => {
                 <input
                   type="number"
                   placeholder="New Total"
+                  value={totalInputs[machine] || ""}
+                  min="0"
                   style={{ padding: "5px", marginRight: "10px", width: "100px" }}
-                  onChange={(e) =>
-                    updateTotalCount(machine, parseInt(e.target.value) || machineData[machine].totalCount)
-                  }
+                  onChange={(e) => handleInputChange(setTotalInputs, machine, e.target.value)}
                 />
                 <button
                   style={{
@@ -105,25 +102,22 @@ const Machines = ({ initialMachineData }) => {
                     color: "white",
                     border: "none",
                     borderRadius: "5px",
+                    marginLeft: "5px",
                   }}
-                  onClick={() =>
-                    updateTotalCount(
-                      machine,
-                      parseInt(prompt("Enter new Total Count:")) || machineData[machine].totalCount
-                    )
-                  }
+                  onClick={() => updateTotalCount(machine)}
                 >
-                  Set Total
+                  Order Count
                 </button>
               </div>
               {/* Add Progress */}
               <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
                 <input
                   type="number"
-                  placeholder="Add Progress"
+                  placeholder="Add"
                   value={addInputs[machine] || ""}
+                  min="0"
                   style={{ padding: "5px", marginRight: "10px", width: "100px" }}
-                  onChange={(e) => handleAddInputChange(machine, e.target.value)}
+                  onChange={(e) => handleInputChange(setAddInputs, machine, e.target.value)}
                 />
                 <button
                   style={{
@@ -136,20 +130,21 @@ const Machines = ({ initialMachineData }) => {
                   }}
                   onClick={() => {
                     updateProgress(machine, addInputs[machine] || 0);
-                    setAddInputs((prev) => ({ ...prev, [machine]: "" })); // Clear input after addition
+                    setAddInputs((prev) => ({ ...prev, [machine]: "" }));
                   }}
                 >
-                  Add Progress
+                  Log Production
                 </button>
               </div>
               {/* Subtract Progress */}
               <div style={{ display: "flex", alignItems: "center" }}>
                 <input
                   type="number"
-                  placeholder="Subtract Progress"
+                  placeholder="Remove"
                   value={subtractInputs[machine] || ""}
+                  min="0"
                   style={{ padding: "5px", marginRight: "10px", width: "100px" }}
-                  onChange={(e) => handleSubtractInputChange(machine, e.target.value)}
+                  onChange={(e) => handleInputChange(setSubtractInputs, machine, e.target.value)}
                 />
                 <button
                   style={{
@@ -161,11 +156,11 @@ const Machines = ({ initialMachineData }) => {
                     marginLeft: "5px",
                   }}
                   onClick={() => {
-                    updateProgress(machine, -(subtractInputs[machine] || 0)); // Subtract progress
-                    setSubtractInputs((prev) => ({ ...prev, [machine]: "" })); // Clear input after subtraction
+                    updateProgress(machine, -(subtractInputs[machine] || 0));
+                    setSubtractInputs((prev) => ({ ...prev, [machine]: "" }));
                   }}
                 >
-                  Subtract Progress
+                  Remove Units
                 </button>
               </div>
             </div>
