@@ -52,136 +52,143 @@ const ClientsHub = () => {
   return (
     <Container>
       <h2 className="my-4">Clients Hub</h2>
-      <Row>
-        {clients.map((client) => (
-          <Col key={client.id} sm={12} md={6} lg={4} xl={3}>
-            <Card className="mb-4">
-              <Card.Body>
-                {editingClient === client.id ? (
-                  // Editing mode
-                  <Form>
-                    <Form.Group controlId="formClientName" className="mb-3">
-                      <Form.Label>Client Name</Form.Label>
-                      <Form.Control
-                        type="text"
-                        value={client.clientName}
-                        onChange={(e) =>
-                          setClients((prev) =>
-                            prev.map((item) =>
-                              item.id === client.id
-                                ? { ...item, clientName: e.target.value }
-                                : item
+      {clients.length === 0 ? (
+        <div className="text-center my-4">
+          <h4>No client information available</h4>
+          <p>Please add client info to start tracking.</p>
+        </div>
+      ) : (
+        <Row>
+          {clients.map((client) => (
+            <Col key={client.id} sm={12} md={6} lg={4} xl={3}>
+              <Card className="mb-4">
+                <Card.Body>
+                  {editingClient === client.id ? (
+                    // Editing mode
+                    <Form>
+                      <Form.Group controlId="formClientName" className="mb-3">
+                        <Form.Label>Client Name</Form.Label>
+                        <Form.Control
+                          type="text"
+                          value={client.clientName}
+                          onChange={(e) =>
+                            setClients((prev) =>
+                              prev.map((item) =>
+                                item.id === client.id
+                                  ? { ...item, clientName: e.target.value }
+                                  : item
+                              )
                             )
-                          )
-                        }
-                      />
-                    </Form.Group>
-                    <Form.Group controlId="formDescription" className="mb-3">
-                      <Form.Label>Description</Form.Label>
-                      <Form.Control
-                        type="text"
-                        value={client.description}
-                        onChange={(e) =>
-                          setClients((prev) =>
-                            prev.map((item) =>
-                              item.id === client.id
-                                ? { ...item, description: e.target.value }
-                                : item
+                          }
+                        />
+                      </Form.Group>
+                      <Form.Group controlId="formDescription" className="mb-3">
+                        <Form.Label>Description</Form.Label>
+                        <Form.Control
+                          type="text"
+                          value={client.description}
+                          onChange={(e) =>
+                            setClients((prev) =>
+                              prev.map((item) =>
+                                item.id === client.id
+                                  ? { ...item, description: e.target.value }
+                                  : item
+                              )
                             )
-                          )
-                        }
-                      />
-                    </Form.Group>
-                    <Form.Group controlId="formTotalPay" className="mb-3">
-                      <Form.Label>Total Pay</Form.Label>
-                      <Form.Control
-                        type="text"
-                        value={client.totalPay}
-                        onChange={(e) =>
-                          setClients((prev) =>
-                            prev.map((item) =>
-                              item.id === client.id
-                                ? { ...item, totalPay: e.target.value }
-                                : item
+                          }
+                        />
+                      </Form.Group>
+                      <Form.Group controlId="formTotalPay" className="mb-3">
+                        <Form.Label>Total Pay</Form.Label>
+                        <Form.Control
+                          type="text"
+                          value={client.totalPay}
+                          onChange={(e) =>
+                            setClients((prev) =>
+                              prev.map((item) =>
+                                item.id === client.id
+                                  ? { ...item, totalPay: e.target.value }
+                                  : item
+                              )
                             )
-                          )
-                        }
-                      />
-                    </Form.Group>
-                    <Form.Group controlId="formOrderCount" className="mb-3">
-                      <Form.Label>Order Count</Form.Label>
-                      <Form.Control
-                        type="number"
-                        value={client.clientOrderCount}
-                        onChange={(e) =>
-                          setClients((prev) =>
-                            prev.map((item) =>
-                              item.id === client.id
-                                ? { ...item, clientOrderCount: e.target.value }
-                                : item
+                          }
+                        />
+                      </Form.Group>
+                      <Form.Group controlId="formOrderCount" className="mb-3">
+                        <Form.Label>Order Count</Form.Label>
+                        <Form.Control
+                          type="number"
+                          value={client.clientOrderCount}
+                          onChange={(e) =>
+                            setClients((prev) =>
+                              prev.map((item) =>
+                                item.id === client.id
+                                  ? { ...item, clientOrderCount: e.target.value }
+                                  : item
+                              )
                             )
-                          )
-                        }
-                      />
-                    </Form.Group>
-                    <Form.Group controlId="formDeliveryDate" className="mb-3">
-                      <Form.Label>Delivery Date</Form.Label>
-                      <Form.Control
-                        type="date"
-                        value={client.deliveryDate}
-                        onChange={(e) =>
-                          setClients((prev) =>
-                            prev.map((item) =>
-                              item.id === client.id
-                                ? { ...item, deliveryDate: e.target.value }
-                                : item
+                          }
+                        />
+                      </Form.Group>
+                      <Form.Group controlId="formDeliveryDate" className="mb-3">
+                        <Form.Label>Delivery Date</Form.Label>
+                        <Form.Control
+                          type="date"
+                          value={client.deliveryDate}
+                          onChange={(e) =>
+                            setClients((prev) =>
+                              prev.map((item) =>
+                                item.id === client.id
+                                  ? { ...item, deliveryDate: e.target.value }
+                                  : item
+                              )
                             )
-                          )
-                        }
-                      />
-                    </Form.Group>
-                    <Button
-                      variant="success"
-                      className="me-2"
-                      onClick={() => handleSave(client.id, client)}
-                    >
-                      Save
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      onClick={() => setEditingClient(null)}
-                    >
-                      Cancel
-                    </Button>
-                  </Form>
-                ) : (
-                  // Display mode
-                  <>
-                    <Card.Title>{client.clientName}</Card.Title>
-                    <Card.Text>Description: {client.description}</Card.Text>
-                    <Card.Text>Total Pay: {client.totalPay}</Card.Text>
-                    <Card.Text>Order Count: {client.clientOrderCount}</Card.Text>
-                    <Card.Text>Delivery Date: {client.deliveryDate}</Card.Text>
-                    <Button
-                      variant="primary"
-                      className="me-2"
-                      onClick={() => setEditingClient(client.id)}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="danger"
-                      onClick={() => handleDelete(client.id)}
-                    >
-                      Delete
-                    </Button>
-                  </>
-                )}
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Row>
+                          }
+                        />
+                      </Form.Group>
+                      <Button
+                        variant="success"
+                        className="me-2"
+                        onClick={() => handleSave(client.id, client)}
+                      >
+                        Save
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        onClick={() => setEditingClient(null)}
+                      >
+                        Cancel
+                      </Button>
+                    </Form>
+                  ) : (
+                    // Display mode
+                    <>
+                      <Card.Title>{client.clientName}</Card.Title>
+                      <Card.Text>Description: {client.description}</Card.Text>
+                      <Card.Text>Total Pay: {client.totalPay}</Card.Text>
+                      <Card.Text>Order Count: {client.clientOrderCount}</Card.Text>
+                      <Card.Text>Delivery Date: {client.deliveryDate}</Card.Text>
+                      <Button
+                        variant="primary"
+                        className="me-2"
+                        onClick={() => setEditingClient(client.id)}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        variant="danger"
+                        onClick={() => handleDelete(client.id)}
+                      >
+                        Delete
+                      </Button>
+                    </>
+                  )}
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      )}
     </Container>
   );
 };
