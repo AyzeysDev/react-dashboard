@@ -11,7 +11,7 @@ body {
   margin: 100px auto;
   padding: 30px;
   text-align: center;
-  background: linear-gradient(145deg, #bdc3c7   , #2c3e50 );
+  background: linear-gradient(145deg, #c0c0c0   , #ebf3fc );
   border-radius: 15px;
   box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
   font-family: "Roboto", sans-serif; /* Modern font */
@@ -19,12 +19,12 @@ body {
 }
 
 /* Styling for the brand name in LoginSignup */
-.login-container h1 {
-  color: #f9c76a; /* Red color for the brand */
-  font-size: 28px;
-  font-weight: bold;
+.login-container h2 {
+  color: #333333; /* Red color for the brand */
+  font-size: 25px;
+  /* font-weight: bold; */
   text-shadow: 1px 1px 2px rgba(1, 146, 204, 0.1); /* Optional subtle shadow */
-  font-family: "Poppins", sans-serif; /* Modern font for branding */
+  font-family: "Roboto", sans-serif; /* Modern font for branding */
 }
 
 
@@ -39,7 +39,7 @@ h1 {
   font-size: 28px;
   font-weight: 700;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-  font-family: "Poppins", sans-serif; /* Standout font for headers */
+  font-family: "Roboto", sans-serif; /* Standout font for headers */
 }
 
 /* Form group styling */
