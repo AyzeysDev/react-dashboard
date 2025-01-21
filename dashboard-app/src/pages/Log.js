@@ -20,6 +20,7 @@ const DowntimeLog = () => {
   const [endTime, setEndTime] = useState("");
   const [date, setDate] = useState("");
   const [error, setError] = useState("");
+  const [formVisible, setFormVisible] = useState(false); // To toggle form visibility
 
   const downtimeLogCollection = collection(db, "downtimeLog");
 
@@ -33,7 +34,10 @@ const DowntimeLog = () => {
           logsData.push({ id: doc.id, ...doc.data() });
         });
         // Sort logs in descending order of date and time
-        logsData.sort((a, b) => new Date(b.date + "T" + b.startTime) - new Date(a.date + "T" + a.startTime));
+        logsData.sort(
+          (a, b) =>
+            new Date(b.date + "T" + b.startTime) - new Date(a.date + "T" + a.startTime)
+        );
         setLogs(logsData);
       } catch (err) {
         console.error("Error fetching logs:", err);
@@ -68,6 +72,7 @@ const DowntimeLog = () => {
         setDate("");
         setStartTime("");
         setEndTime("");
+        setFormVisible(false); // Hide form after successful submission
       } catch (err) {
         setError("Error saving log to database.");
         console.error(err);
@@ -92,77 +97,98 @@ const DowntimeLog = () => {
         <Col xs={12} md={8}>
           <h2 className="mb-4 text-center">Downtime Log</h2>
 
-          {error && <p className="text-danger">{error}</p>}
-
-          {/* Dropdown for Machines */}
-          <div className="mb-3">
-            <Dropdown>
-              <Dropdown.Toggle variant="outline-warning" id="dropdown-basic">
-                {machine || "Select Machine"}
-              </Dropdown.Toggle>
-
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={() => setMachine("Machine 1")}>Machine 1</Dropdown.Item>
-                <Dropdown.Item onClick={() => setMachine("Machine 2")}>Machine 2</Dropdown.Item>
-                <Dropdown.Item onClick={() => setMachine("Machine 3")}>Machine 3</Dropdown.Item>
-                <Dropdown.Item onClick={() => setMachine("Machine 4")}>Machine 4</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </div>
-
-          {/* Cause Input */}
-          <div className="mb-3">
-            <Form.Group>
-              <Form.Label>Cause</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter cause"
-                value={cause}
-                onChange={(e) => setCause(e.target.value)}
-              />
-            </Form.Group>
-          </div>
-
-          {/* Date Input */}
-          <div className="mb-3">
-            <Form.Group>
-              <Form.Label>Date</Form.Label>
-              <Form.Control
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-              />
-            </Form.Group>
-          </div>
-
-          {/* Start Time Input */}
-          <div className="mb-3">
-            <Form.Group>
-              <Form.Label>Start Time</Form.Label>
-              <Form.Control
-                type="time"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-              />
-            </Form.Group>
-          </div>
-
-          {/* End Time Input */}
-          <div className="mb-3">
-            <Form.Group>
-              <Form.Label>End Time</Form.Label>
-              <Form.Control
-                type="time"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
-              />
-            </Form.Group>
-          </div>
-
-          {/* Submit Button */}
-          <Button variant="success" onClick={handleLogSubmit}>
-            Enter Log
+          {/* Toggle form button */}
+          <Button
+            variant={formVisible ? "danger" : "primary"}
+            className="mb-3"
+            onClick={() => setFormVisible((prev) => !prev)}
+          >
+            {formVisible ? "Minimize" : "Enter Downtime"}
           </Button>
+
+          {formVisible && (
+            <>
+              {error && <p className="text-danger">{error}</p>}
+
+              {/* Dropdown for Machines */}
+              <div className="mb-3">
+                <Dropdown>
+                  <Dropdown.Toggle variant="outline-warning" id="dropdown-basic">
+                    {machine || "Select Machine"}
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item onClick={() => setMachine("Machine 1")}>
+                      Machine 1
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => setMachine("Machine 2")}>
+                      Machine 2
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => setMachine("Machine 3")}>
+                      Machine 3
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => setMachine("Machine 4")}>
+                      Machine 4
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
+
+              {/* Cause Input */}
+              <div className="mb-3">
+                <Form.Group>
+                  <Form.Label>Cause</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter cause"
+                    value={cause}
+                    onChange={(e) => setCause(e.target.value)}
+                  />
+                </Form.Group>
+              </div>
+
+              {/* Date Input */}
+              <div className="mb-3">
+                <Form.Group>
+                  <Form.Label>Date</Form.Label>
+                  <Form.Control
+                    type="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                  />
+                </Form.Group>
+              </div>
+
+              {/* Start Time Input */}
+              <div className="mb-3">
+                <Form.Group>
+                  <Form.Label>Start Time</Form.Label>
+                  <Form.Control
+                    type="time"
+                    value={startTime}
+                    onChange={(e) => setStartTime(e.target.value)}
+                  />
+                </Form.Group>
+              </div>
+
+              {/* End Time Input */}
+              <div className="mb-3">
+                <Form.Group>
+                  <Form.Label>End Time</Form.Label>
+                  <Form.Control
+                    type="time"
+                    value={endTime}
+                    onChange={(e) => setEndTime(e.target.value)}
+                  />
+                </Form.Group>
+              </div>
+
+              {/* Submit Button */}
+              <Button variant="success" onClick={handleLogSubmit}>
+                Submit Log
+              </Button>
+            </>
+          )}
 
           {/* Logs */}
           <div className="mt-4">

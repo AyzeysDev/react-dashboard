@@ -1,21 +1,43 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col, Container, Card, Button, Form } from "react-bootstrap";
-import { collection, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
-import { db } from "../firebase/firebase"; // Ensure this points to your Firebase configuration
+import {
+  collection,
+  getDocs,
+  doc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
+import { db } from "../firebase/firebase";
 
 const ClientsHub = () => {
   const [clients, setClients] = useState([]);
-  const [editingClient, setEditingClient] = useState(null); // To track which client is being edited
+  const [editingClient, setEditingClient] = useState(null);
   const clientsCollection = collection(db, "clientsData");
 
-  // Fetch clients from Firestore
+  // Fetch clients from Firestore, handle deletion of old dates, and sort by delivery date
   useEffect(() => {
     const fetchClients = async () => {
       const querySnapshot = await getDocs(clientsCollection);
       const clientsData = [];
-      querySnapshot.forEach((doc) => {
-        clientsData.push({ id: doc.id, ...doc.data() });
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1); // Calculate yesterday's date
+
+      querySnapshot.forEach(async (docSnapshot) => {
+        const client = { id: docSnapshot.id, ...docSnapshot.data() };
+        const deliveryDate = new Date(client.deliveryDate);
+
+        if (deliveryDate < yesterday) {
+          // Delete clients with delivery dates before yesterday
+          await deleteDoc(doc(db, "clientsData", client.id));
+        } else {
+          clientsData.push(client);
+        }
       });
+
+      // Sort clients by delivery date in ascending order
+      clientsData.sort(
+        (a, b) => new Date(a.deliveryDate) - new Date(b.deliveryDate)
+      );
       setClients(clientsData);
     };
 
@@ -64,7 +86,6 @@ const ClientsHub = () => {
               <Card className="mb-4">
                 <Card.Body>
                   {editingClient === client.id ? (
-                    // Editing mode
                     <Form>
                       <Form.Group controlId="formClientName" className="mb-3">
                         <Form.Label>Client Name</Form.Label>
@@ -123,7 +144,10 @@ const ClientsHub = () => {
                             setClients((prev) =>
                               prev.map((item) =>
                                 item.id === client.id
-                                  ? { ...item, clientOrderCount: e.target.value }
+                                  ? {
+                                      ...item,
+                                      clientOrderCount: e.target.value,
+                                    }
                                   : item
                               )
                             )
@@ -135,6 +159,7 @@ const ClientsHub = () => {
                         <Form.Control
                           type="date"
                           value={client.deliveryDate}
+                          min={new Date().toISOString().split("T")[0]} // Restrict past dates
                           onChange={(e) =>
                             setClients((prev) =>
                               prev.map((item) =>
@@ -161,13 +186,16 @@ const ClientsHub = () => {
                       </Button>
                     </Form>
                   ) : (
-                    // Display mode
                     <>
                       <Card.Title>{client.clientName}</Card.Title>
                       <Card.Text>Description: {client.description}</Card.Text>
                       <Card.Text>Total Pay: {client.totalPay}</Card.Text>
-                      <Card.Text>Order Count: {client.clientOrderCount}</Card.Text>
-                      <Card.Text>Delivery Date: {client.deliveryDate}</Card.Text>
+                      <Card.Text>
+                        Order Count: {client.clientOrderCount}
+                      </Card.Text>
+                      <Card.Text>
+                        Delivery Date: {client.deliveryDate}
+                      </Card.Text>
                       <Button
                         variant="primary"
                         className="me-2"

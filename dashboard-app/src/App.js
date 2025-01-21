@@ -16,6 +16,7 @@ import Exports from "./pages/Exports";
 
 function App() {
   const [clients, setClients] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
   const [machineData, setMachineData] = useState({
     machine1: { value: 0, totalCount: 1 },
     machine2: { value: 0, totalCount: 1 },
@@ -66,11 +67,14 @@ function App() {
       <BrowserRouter>
         <div>
           {/* Header always visible */}
-          <Header />
+          <Header currentUser={currentUser} />
           <main className="py-3">
             <Container>
               <Routes>
-                <Route path="/" element={<LoginSignup />} />
+              <Route
+                path="/"
+                element={<LoginSignup setCurrentUser={setCurrentUser} />}
+              />
                 <Route path="/home" element={<Home />} />
                 <Route
                   path="/clients"
