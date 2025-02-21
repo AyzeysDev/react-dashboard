@@ -19,8 +19,7 @@ const Header = ({ currentUser }) => {
       >
         <Container>
           <Navbar.Brand>
-            <i className="fa fa-terminal"></i> Advanced Chain Technologies{" "}
-            <i className="fa fa-terminal"></i>
+            Advanced Chain Technologies<i className="fa fa-link" style={{ marginLeft: "8px" }}></i>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
