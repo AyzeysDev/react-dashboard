@@ -72,7 +72,7 @@ const ClientsHub = () => {
   };
 
   return (
-    <Container>
+    <Container className="mt-3">
       <h2 className="my-4">Clients Hub</h2>
       {clients.length === 0 ? (
         <div className="text-center my-4">

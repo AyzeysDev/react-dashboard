@@ -36,6 +36,13 @@ const Machines = () => {
     { limit: totalCount, color: "#2389da" }, // Blue for 60-100%
   ];
 
+  const machineNameMap = {
+    machine1: "Battenfeld",
+    machine2: "Machine - 320",
+    machine3: "Yizumi",
+    machine4: "Machine - 200",
+  };
+
   // Fetch initial data from Firebase
   useEffect(() => {
     const fetchMachineData = async () => {
@@ -210,7 +217,7 @@ const Machines = () => {
               width: "300px",
             }}
           >
-            <h4>Machine {index + 1}</h4>
+            <h4>{machineNameMap[machine] || machine}</h4>
             <GaugeComponent
               value={machineData[machine].value}
               minValue={0}
@@ -358,7 +365,7 @@ const Machines = () => {
             key={tank}
             style={{ textAlign: "center", margin: "20px", width: "300px" }}
           >
-            <h4>Water Tank {index + 1}</h4>
+            <h4>Water Tank - {index + 1}</h4>
             <GaugeComponent
               value={waterTankData[tank].value}
               minValue={0}

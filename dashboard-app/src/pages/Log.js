@@ -92,10 +92,10 @@ const DowntimeLog = () => {
   };
 
   return (
-    <Container>
-      <Row className="justify-content-md-center">
-        <Col xs={12} md={8}>
-          <h2 className="mb-4 text-center">Downtime Log</h2>
+    <Container className="mt-3">
+      <Row className="justify-content-center">
+        <Col xs={12} md={9}>
+          <h2 className="mb-4 text-center">Daily Logs</h2>
 
           {/* Toggle form button */}
           <Button
@@ -103,7 +103,7 @@ const DowntimeLog = () => {
             className="mb-3"
             onClick={() => setFormVisible((prev) => !prev)}
           >
-            {formVisible ? "Minimize" : "Enter Downtime"}
+            {formVisible ? "Minimize" : "Enter Daily Log"}
           </Button>
 
           {formVisible && (
@@ -119,16 +119,16 @@ const DowntimeLog = () => {
 
                   <Dropdown.Menu>
                     <Dropdown.Item onClick={() => setMachine("Machine 1")}>
-                      Machine 1
+                      Battenfeld
                     </Dropdown.Item>
                     <Dropdown.Item onClick={() => setMachine("Machine 2")}>
-                      Machine 2
+                      Machine - 320
                     </Dropdown.Item>
                     <Dropdown.Item onClick={() => setMachine("Machine 3")}>
-                      Machine 3
+                      Yizumi
                     </Dropdown.Item>
                     <Dropdown.Item onClick={() => setMachine("Machine 4")}>
-                      Machine 4
+                      Machine - 200
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
@@ -137,10 +137,10 @@ const DowntimeLog = () => {
               {/* Cause Input */}
               <div className="mb-3">
                 <Form.Group>
-                  <Form.Label>Cause</Form.Label>
+                  <Form.Label>Description</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Enter cause"
+                    placeholder="Enter description"
                     value={cause}
                     onChange={(e) => setCause(e.target.value)}
                   />

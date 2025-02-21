@@ -149,7 +149,7 @@ const Exports = () => {
   };
 
   return (
-    <Container className="mt-5">
+    <Container className="mt-3">
       <Row className="justify-content-center">
         <Col xs={12} md={8}>
           <h2 className="text-center mb-4">Exports</h2>

@@ -10,7 +10,7 @@ const Header = ({ currentUser }) => {
   return (
     <header>
       <Navbar
-        bg="light"
+        bg="dark"
         className="bg-body-tertiary"
         data-bs-theme="light"
         variant="light"
@@ -19,7 +19,7 @@ const Header = ({ currentUser }) => {
       >
         <Container>
           <Navbar.Brand>
-            Advanced Chain Technologies<i className="fa fa-link" style={{ marginLeft: "8px" }}></i>
+            Advanced Chain Technologies<i className="fa fa-cogs" style={{ marginLeft: "8px" }}></i>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">

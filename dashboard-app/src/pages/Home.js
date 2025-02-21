@@ -2,7 +2,7 @@ import React from "react";
 
 const Home = () => {
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
+    <div style={{ textAlign: "center", marginTop: "30px" }}>
       <h1>A.C.T Australia Pty Ltd</h1>
 
       {/* Flex container for items */}
