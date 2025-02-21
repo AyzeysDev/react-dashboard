@@ -207,7 +207,7 @@ const Exports = () => {
             className="d-flex align-items-center justify-content-center"
             style={{ gap: "10px" }}
           >
-            <i className="fa fa-clipboard"></i> Export Downtime Logs
+            <i className="fa fa-clipboard"></i> Export Daily Logs
           </Button>
         </Col>
       </Row>
